@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Company\AttendanceController as CompanyAttendanceController;
 use App\Http\Controllers\Company\DebtController;
+use App\Http\Controllers\Company\ReportController;
 use App\Http\Controllers\Company\TransactionController;
 use App\Http\Controllers\Employee\AttendanceController as EmployeeAttendanceController;
 use App\Http\Controllers\ProfileController;
@@ -55,6 +56,14 @@ Route::middleware(['auth', 'role:owner,super_admin'])
         Route::get('attendances', [App\Http\Controllers\Company\AttendanceController::class, 'index'])->name('attendances.index');
         Route::get('attendances/create', [App\Http\Controllers\Company\AttendanceController::class, 'create'])->name('attendances.create');
         Route::post('attendances', [App\Http\Controllers\Company\AttendanceController::class, 'store'])->name('attendances.store');
+
+        Route::prefix('reports')->name('reports.')->group(function () {
+            Route::get('/', [App\Http\Controllers\Company\ReportController::class, 'index'])->name('index');
+            Route::get('/attendance', [App\Http\Controllers\Company\ReportController::class, 'attendance'])->name('attendance');
+            Route::get('/attendance/pdf', [App\Http\Controllers\Company\ReportController::class, 'attendancePdf'])->name('attendance.pdf');
+            Route::get('/debts', [App\Http\Controllers\Company\ReportController::class, 'debts'])->name('debts');
+            Route::get('/debts/pdf', [App\Http\Controllers\Company\ReportController::class, 'debtsPdf'])->name('debts.pdf');
+        });
     });
 
 // ─── Employee ────────────────────────────────────────────
