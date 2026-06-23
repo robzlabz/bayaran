@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Company\DebtController;
+use App\Http\Controllers\Company\TransactionController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -42,6 +43,12 @@ Route::middleware(['auth', 'role:owner,super_admin'])
         Route::resource('employees', App\Http\Controllers\Company\EmployeeController::class);
         Route::resource('debts', App\Http\Controllers\Company\DebtController::class)->except(['show']);
         Route::patch('debts/{debt}/pay', [App\Http\Controllers\Company\DebtController::class, 'pay'])->name('debts.pay');
+
+        Route::get('transactions', [App\Http\Controllers\Company\TransactionController::class, 'index'])->name('transactions.index');
+        Route::get('transactions/topup', [App\Http\Controllers\Company\TransactionController::class, 'createTopup'])->name('transactions.topup');
+        Route::post('transactions/topup', [App\Http\Controllers\Company\TransactionController::class, 'storeTopup'])->name('transactions.topup.store');
+        Route::get('transports/create', [App\Http\Controllers\Company\TransactionController::class, 'createTransport'])->name('transports.create');
+        Route::post('transports', [App\Http\Controllers\Company\TransactionController::class, 'storeTransport'])->name('transports.store');
     });
 
 // ─── Employee ────────────────────────────────────────────
