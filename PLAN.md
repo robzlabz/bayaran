@@ -310,7 +310,7 @@ Fase 6: Laporan
 - [x] PostgreSQL configured
 - [x] Git initialized, first commit done
 - [x] Fase 1: Foundation
-- [ ] Fase 2: Manajemen Karyawan
+- [x] Fase 2: Manajemen Karyawan (CRUD)
 - [ ] Fase 3: Hutang
 - [ ] Fase 4: Saldo & Ongkos
 - [ ] Fase 5: Absensi Foto

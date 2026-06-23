@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Company\DebtController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,12 +34,14 @@ Route::middleware(['auth', 'verified', 'role:super_admin'])
     });
 
 // ─── Company / Owner ─────────────────────────────────────
-Route::middleware(['auth', 'verified', 'role:owner,super_admin'])
+Route::middleware(['auth', 'role:owner,super_admin'])
     ->prefix('company')
     ->name('company.')
     ->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\Company\DashboardController::class, 'index'])->name('dashboard');
         Route::resource('employees', App\Http\Controllers\Company\EmployeeController::class);
+        Route::resource('debts', App\Http\Controllers\Company\DebtController::class)->except(['show']);
+        Route::patch('debts/{debt}/pay', [App\Http\Controllers\Company\DebtController::class, 'pay'])->name('debts.pay');
     });
 
 // ─── Employee ────────────────────────────────────────────
