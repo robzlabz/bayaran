@@ -63,7 +63,7 @@
         </div>
 
         <!-- Footer -->
-        <p class="mt-8 text-xs text-gray-400 dark:text-gray-500">KaryawanKu &mdash; Manajemen Karyawan</p>
+        <p class="mt-8 text-xs text-gray-400 dark:text-gray-500">Bayaran &mdash; Manajemen Karyawan</p>
     </div>
 </body>
 </html>
