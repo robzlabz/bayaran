@@ -37,6 +37,7 @@ class EmployeeController extends Controller
 
         $validated['owner_id'] = auth()->id();
         $validated['balance'] = 0;
+        $validated['leave_quota'] = $validated['payment_type'] === 'monthly' ? 12 : 0;
 
         $employee = Employee::create($validated);
 

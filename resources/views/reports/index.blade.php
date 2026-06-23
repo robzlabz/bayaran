@@ -3,11 +3,12 @@
 
     <div class="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {{-- Summary Cards --}}
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
             <x-dashboard-stat icon="people" label="Karyawan" :value="$activeEmployees . ' / ' . $totalEmployees" color="indigo" />
             <x-dashboard-stat icon="clipboard" label="Absen Hari Ini" :value="$todayAttendance" color="yellow" />
             <x-dashboard-stat icon="money" label="Hutang Aktif" :value="'Rp ' . number_format($unpaidDebt, 0, ',', '.')" color="red" />
             <x-dashboard-stat icon="wallet" label="Total Saldo" :value="'Rp ' . number_format($totalBalance, 0, ',', '.')" color="green" />
+            <x-dashboard-stat icon="calendar" label="Izin Tahun Ini" :value="$totalLeaves" color="blue" />
         </div>
 
         {{-- Report Links --}}

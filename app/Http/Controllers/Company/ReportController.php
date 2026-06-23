@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\Debt;
 use App\Models\Employee;
+use App\Models\Leave;
 use App\Models\Transaction;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -25,9 +26,11 @@ class ReportController extends Controller
         $unpaidDebt = Debt::whereIn('employee_id', $employeeIds)->where('is_paid', false)->sum('amount');
         $todayAttendance = Attendance::whereIn('employee_id', $employeeIds)->whereDate('clock_in', today())->count();
 
+        $totalLeaves = Leave::whereIn('employee_id', $employeeIds)->year()->count();
+
         return view('reports.index', compact(
             'totalEmployees', 'activeEmployees', 'totalBalance',
-            'totalDebt', 'unpaidDebt', 'todayAttendance'
+            'totalDebt', 'unpaidDebt', 'todayAttendance', 'totalLeaves'
         ));
     }
 

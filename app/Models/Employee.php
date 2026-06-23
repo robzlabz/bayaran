@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Employee extends Model
 {
@@ -19,6 +20,7 @@ class Employee extends Model
         'daily_rate',
         'delivery_rate',
         'hourly_rate',
+        'leave_quota',
         'balance',
         'is_active',
         'photo',
@@ -33,6 +35,7 @@ class Employee extends Model
             'daily_rate' => 'decimal:2',
             'delivery_rate' => 'decimal:2',
             'hourly_rate' => 'decimal:2',
+            'leave_quota' => 'integer',
         ];
     }
 
@@ -44,6 +47,11 @@ class Employee extends Model
     public function user()
     {
         return $this->hasOne(User::class, 'employee_id');
+    }
+
+    public function leaves(): HasMany
+    {
+        return $this->hasMany(Leave::class);
     }
 
     public function getPaymentTypeLabelAttribute(): string
@@ -66,5 +74,15 @@ class Employee extends Model
             'per_delivery' => $this->delivery_rate ? 'Rp ' . number_format($this->delivery_rate, 0, ',', '.') . ' /pengantaran' : '-',
             default => '-',
         };
+    }
+
+    public function getLeaveTakenAttribute(): int
+    {
+        return $this->leaves()->year()->count();
+    }
+
+    public function getLeaveRemainingAttribute(): int
+    {
+        return max(0, $this->leave_quota - $this->leave_taken);
     }
 }
