@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Company\AttendanceController as CompanyAttendanceController;
 use App\Http\Controllers\Company\DebtController;
 use App\Http\Controllers\Company\TransactionController;
+use App\Http\Controllers\Employee\AttendanceController as EmployeeAttendanceController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -49,6 +51,10 @@ Route::middleware(['auth', 'role:owner,super_admin'])
         Route::post('transactions/topup', [App\Http\Controllers\Company\TransactionController::class, 'storeTopup'])->name('transactions.topup.store');
         Route::get('transports/create', [App\Http\Controllers\Company\TransactionController::class, 'createTransport'])->name('transports.create');
         Route::post('transports', [App\Http\Controllers\Company\TransactionController::class, 'storeTransport'])->name('transports.store');
+
+        Route::get('attendances', [App\Http\Controllers\Company\AttendanceController::class, 'index'])->name('attendances.index');
+        Route::get('attendances/create', [App\Http\Controllers\Company\AttendanceController::class, 'create'])->name('attendances.create');
+        Route::post('attendances', [App\Http\Controllers\Company\AttendanceController::class, 'store'])->name('attendances.store');
     });
 
 // ─── Employee ────────────────────────────────────────────
@@ -57,6 +63,10 @@ Route::middleware(['auth', 'verified', 'role:employee'])
     ->name('employee.')
     ->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\Employee\DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/attendance/status', [App\Http\Controllers\Employee\AttendanceController::class, 'status'])->name('attendance.status');
+        Route::post('/attendance/clock-in', [App\Http\Controllers\Employee\AttendanceController::class, 'clockIn'])->name('attendance.clock-in');
+        Route::post('/attendance/clock-out', [App\Http\Controllers\Employee\AttendanceController::class, 'clockOut'])->name('attendance.clock-out');
+        Route::get('/attendance/history', [App\Http\Controllers\Employee\AttendanceController::class, 'history'])->name('attendance.history');
     });
 
 // ─── Profile ─────────────────────────────────────────────

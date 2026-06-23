@@ -1,0 +1,80 @@
+<?php
+
+namespace App\Http\Controllers\Company;
+
+use App\Http\Controllers\Controller;
+use App\Models\Attendance;
+use App\Models\Employee;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+
+class AttendanceController extends Controller
+{
+    public function index(Request $request): View
+    {
+        $employeeId = $request->get('employee_id');
+        $date = $request->get('date', today()->format('Y-m-d'));
+
+        $employeeIds = Employee::where('owner_id', auth()->id())->pluck('id');
+
+        $query = Attendance::whereIn('employee_id', $employeeIds)->with('employee');
+
+        if ($employeeId) {
+            $query->where('employee_id', $employeeId);
+        }
+
+        $query->whereDate('clock_in', $date);
+
+        $attendances = $query->latest('clock_in')->get();
+        $employees = Employee::where('owner_id', auth()->id())->where('is_active', true)->get();
+
+        $todayCount = Attendance::whereIn('employee_id', $employeeIds)
+            ->whereDate('clock_in', today())
+            ->count();
+
+        $activeEmployees = Employee::where('owner_id', auth()->id())->where('is_active', true)->count();
+
+        return view('attendances.index', compact(
+            'attendances', 'employees', 'employeeId', 'date', 'todayCount', 'activeEmployees'
+        ));
+    }
+
+    public function create(): View
+    {
+        $employees = Employee::where('owner_id', auth()->id())->where('is_active', true)->get();
+        return view('attendances.create', compact('employees'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'employee_id' => ['required', 'exists:employees,id'],
+            'clock_in' => ['required', 'date'],
+            'clock_out' => ['nullable', 'date', 'after:clock_in'],
+            'notes' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $employee = Employee::findOrFail($validated['employee_id']);
+        abort_if($employee->owner_id !== auth()->id(), 403);
+
+        $data = [
+            'employee_id' => $employee->id,
+            'clock_in' => $validated['clock_in'],
+            'clock_out' => $validated['clock_out'] ?? null,
+            'is_manual_entry' => true,
+            'is_clock_in_manual' => true,
+            'is_clock_out_manual' => $validated['clock_out'] ? true : false,
+            'notes' => $validated['notes'] ?? 'Input manual oleh admin',
+        ];
+
+        if ($data['clock_out']) {
+            $minutes = now()->parse($data['clock_out'])->diffInMinutes(now()->parse($data['clock_in']));
+            $data['work_hours'] = round($minutes / 60, 2);
+        }
+
+        Attendance::create($data);
+
+        return redirect()->route('company.attendances.index')
+            ->with('success', 'Absensi manual berhasil dicatat.');
+    }
+}
