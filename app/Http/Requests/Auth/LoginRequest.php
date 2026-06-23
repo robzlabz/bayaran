@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Auth;
 
 use Illuminate\Auth\Events\Lockout;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
@@ -12,52 +11,60 @@ use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
+        $loginType = $this->input('login_type', 'employee');
+
+        if ($loginType === 'admin') {
+            return [
+                'login_type' => ['required', 'in:employee,admin'],
+                'email' => ['required', 'string', 'email'],
+                'password' => ['required', 'string'],
+            ];
+        }
+
         return [
-            'email' => ['required', 'string', 'email'],
+            'login_type' => ['required', 'in:employee,admin'],
+            'phone' => ['required', 'string'],
             'password' => ['required', 'string'],
         ];
     }
 
-    /**
-     * Attempt to authenticate the request's credentials.
-     *
-     * @throws ValidationException
-     */
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        $loginType = $this->input('login_type', 'employee');
+
+        $credentials = match ($loginType) {
+            'admin' => [
+                'email' => $this->input('email'),
+                'password' => $this->input('password'),
+            ],
+            default => [
+                'phone' => $this->input('phone'),
+                'password' => $this->input('password'),
+                'role' => 'employee',
+            ],
+        };
+
+        if (! Auth::attempt($credentials, $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
+            $field = $loginType === 'admin' ? 'email' : 'phone';
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                $field => trans('auth.failed'),
             ]);
         }
 
         RateLimiter::clear($this->throttleKey());
     }
 
-    /**
-     * Ensure the login request is not rate limited.
-     *
-     * @throws ValidationException
-     */
     public function ensureIsNotRateLimited(): void
     {
         if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
@@ -76,11 +83,10 @@ class LoginRequest extends FormRequest
         ]);
     }
 
-    /**
-     * Get the rate limiting throttle key for the request.
-     */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        $loginType = $this->input('login_type', 'employee');
+        $identifier = $loginType === 'admin' ? $this->string('email') : $this->string('phone');
+        return Str::transliterate(Str::lower($identifier) . '|' . $this->ip());
     }
 }

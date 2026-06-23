@@ -13,12 +13,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// ─── Employee Auth (phone + password) ────────────────────
-Route::prefix('employee')->name('employee.')->group(function () {
-    Route::get('/login', [App\Http\Controllers\Employee\Auth\LoginController::class, 'create'])->name('login');
-    Route::post('/login', [App\Http\Controllers\Employee\Auth\LoginController::class, 'store']);
-    Route::post('/logout', [App\Http\Controllers\Employee\Auth\LoginController::class, 'destroy'])->name('logout');
-});
+// ─── Employee logout ─────────────────────────────────────
+Route::post('/employee/logout', function (Illuminate\Http\Request $request) {
+    Illuminate\Support\Facades\Auth::guard('web')->logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect('/');
+})->name('employee.logout');
 
 // ─── Login redirect based on role ───────────────────────
 Route::middleware(['auth', 'verified'])->get('/dashboard', function () {

@@ -33,13 +33,38 @@ class UserFactory extends Factory
         ];
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
     public function unverified(): static
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    public function owner(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'owner',
+            'account_type' => 'personal',
+            'phone' => fake()->unique()->numerify('08##########'),
+        ]);
+    }
+
+    public function superAdmin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'super_admin',
+            'account_type' => 'company',
+            'company_name' => fake()->company(),
+        ]);
+    }
+
+    public function employee(string $role = 'employee'): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => $role,
+            'account_type' => 'personal',
+            'phone' => fake()->unique()->numerify('08##########'),
+            'email' => fake()->unique()->safeEmail(),
         ]);
     }
 }

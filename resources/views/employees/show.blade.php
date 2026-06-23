@@ -66,7 +66,7 @@
                             <div class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
                                 <p>No. HP: <strong>{{ $employee->user->phone }}</strong></p>
                                 <p>Password default: <strong>{{ $employee->user->password_default ?? '(sudah diubah)' }}</strong></p>
-                                <p class="text-xs text-gray-400 mt-2">Karyawan bisa login di <code class="bg-gray-100 dark:bg-gray-700 px-1 rounded">/employee/login</code></p>
+                                <p class="text-xs text-gray-400 mt-2">Karyawan bisa login di <a href="{{ route('login') }}" class="text-indigo-500 hover:underline">halaman login</a> — pilih tab Karyawan</p>
                             </div>
                         @else
                             <p class="text-sm text-gray-400">Akun login belum tersedia.</p>
