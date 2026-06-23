@@ -18,6 +18,7 @@ class Employee extends Model
         'salary_amount',
         'daily_rate',
         'delivery_rate',
+        'hourly_rate',
         'balance',
         'is_active',
         'photo',
@@ -31,6 +32,7 @@ class Employee extends Model
             'salary_amount' => 'decimal:2',
             'daily_rate' => 'decimal:2',
             'delivery_rate' => 'decimal:2',
+            'hourly_rate' => 'decimal:2',
         ];
     }
 
@@ -49,6 +51,7 @@ class Employee extends Model
         return match ($this->payment_type) {
             'monthly' => 'Bulanan',
             'daily' => 'Harian',
+            'hourly' => 'Per Jam',
             'per_delivery' => 'Per Pengantaran',
             default => $this->payment_type,
         };
@@ -59,6 +62,7 @@ class Employee extends Model
         return match ($this->payment_type) {
             'monthly' => $this->salary_amount ? 'Rp ' . number_format($this->salary_amount, 0, ',', '.') : '-',
             'daily' => $this->daily_rate ? 'Rp ' . number_format($this->daily_rate, 0, ',', '.') . ' /hari' : '-',
+            'hourly' => $this->hourly_rate ? 'Rp ' . number_format($this->hourly_rate, 0, ',', '.') . ' /jam' : '-',
             'per_delivery' => $this->delivery_rate ? 'Rp ' . number_format($this->delivery_rate, 0, ',', '.') . ' /pengantaran' : '-',
             default => '-',
         };

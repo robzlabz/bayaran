@@ -39,7 +39,7 @@
                 {{-- Tipe Pembayaran --}}
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tipe Pembayaran</label>
-                    <div class="grid grid-cols-3 gap-3">
+                    <div class="grid grid-cols-4 gap-3">
                         <label class="relative flex cursor-pointer rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 p-4 shadow-sm focus:outline-none has-[:checked]:border-indigo-500 has-[:checked]:ring-1 has-[:checked]:ring-indigo-500">
                             <input type="radio" name="payment_type" value="monthly" class="sr-only"
                                    {{ old('payment_type') === 'monthly' ? 'checked' : '' }}
@@ -56,6 +56,15 @@
                             <div class="text-center w-full">
                                 <span class="block text-sm font-medium text-gray-900 dark:text-gray-100">Harian</span>
                                 <span class="text-xs text-gray-500 dark:text-gray-400">Upah per hari</span>
+                            </div>
+                        </label>
+                        <label class="relative flex cursor-pointer rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 p-4 shadow-sm focus:outline-none has-[:checked]:border-purple-500 has-[:checked]:ring-1 has-[:checked]:ring-purple-500">
+                            <input type="radio" name="payment_type" value="hourly" class="sr-only"
+                                   {{ old('payment_type') === 'hourly' ? 'checked' : '' }}
+                                   onchange="togglePaymentFields()">
+                            <div class="text-center w-full">
+                                <span class="block text-sm font-medium text-gray-900 dark:text-gray-100">Per Jam</span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">Upah per jam</span>
                             </div>
                         </label>
                         <label class="relative flex cursor-pointer rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 p-4 shadow-sm focus:outline-none has-[:checked]:border-yellow-500 has-[:checked]:ring-1 has-[:checked]:ring-yellow-500">
@@ -88,6 +97,17 @@
                         <input type="number" id="daily_rate" name="daily_rate" value="{{ old('daily_rate') }}"
                                class="block w-full pl-10 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-green-500 focus:ring-green-500 text-sm px-4 py-2.5"
                                placeholder="0">
+                    </div>
+                </div>
+
+                <div id="field-hourly" class="payment-field {{ old('payment_type') === 'hourly' ? '' : 'hidden' }}">
+                    <label for="hourly_rate" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Upah Per Jam</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">Rp</span>
+                        <input type="number" id="hourly_rate" name="hourly_rate" value="{{ old('hourly_rate') }}"
+                               class="block w-full pl-10 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm px-4 py-2.5"
+                               placeholder="0">
+                        <p class="mt-1 text-xs text-gray-400">Total gaji = jam kerja × upah per jam. Dihitung otomatis saat clock out.</p>
                     </div>
                 </div>
 

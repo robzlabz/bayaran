@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Company;
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\Employee;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -45,7 +46,7 @@ class AttendanceController extends Controller
         return view('attendances.create', compact('employees'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'employee_id' => ['required', 'exists:employees,id'],
@@ -76,5 +77,57 @@ class AttendanceController extends Controller
 
         return redirect()->route('company.attendances.index')
             ->with('success', 'Absensi manual berhasil dicatat.');
+    }
+
+    public function edit(Attendance $attendance): View
+    {
+        $this->authorizeOwner($attendance);
+        $employees = Employee::where('owner_id', auth()->id())->where('is_active', true)->get();
+        return view('attendances.edit', compact('attendance', 'employees'));
+    }
+
+    public function update(Request $request, Attendance $attendance): RedirectResponse
+    {
+        $this->authorizeOwner($attendance);
+
+        $validated = $request->validate([
+            'clock_in' => ['required', 'date'],
+            'clock_out' => ['nullable', 'date', 'after:clock_in'],
+            'notes' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $data = [
+            'clock_in' => $validated['clock_in'],
+            'clock_out' => $validated['clock_out'] ?? null,
+            'is_clock_in_manual' => true,
+            'notes' => $validated['notes'] ?? $attendance->notes,
+        ];
+
+        if ($data['clock_out']) {
+            $data['is_clock_out_manual'] = true;
+            $minutes = now()->parse($data['clock_out'])->diffInMinutes(now()->parse($data['clock_in']));
+            $data['work_hours'] = round($minutes / 60, 2);
+        } else {
+            $data['work_hours'] = null;
+        }
+
+        $attendance->update($data);
+
+        return redirect()->route('company.attendances.index', ['date' => $attendance->clock_in->format('Y-m-d')])
+            ->with('success', 'Absensi berhasil diperbarui.');
+    }
+
+    public function destroy(Attendance $attendance): RedirectResponse
+    {
+        $this->authorizeOwner($attendance);
+        $attendance->delete();
+
+        return redirect()->route('company.attendances.index')
+            ->with('success', 'Absensi berhasil dihapus.');
+    }
+
+    private function authorizeOwner(Attendance $attendance): void
+    {
+        abort_if($attendance->employee->owner_id !== auth()->id(), 403);
     }
 }

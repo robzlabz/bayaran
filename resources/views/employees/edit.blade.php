@@ -36,7 +36,7 @@
                 {{-- Tipe Pembayaran --}}
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tipe Pembayaran</label>
-                    <div class="grid grid-cols-3 gap-3">
+                    <div class="grid grid-cols-4 gap-3">
                         <label class="relative flex cursor-pointer rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 p-4 shadow-sm focus:outline-none has-[:checked]:border-indigo-500 has-[:checked]:ring-1 has-[:checked]:ring-indigo-500">
                             <input type="radio" name="payment_type" value="monthly" class="sr-only"
                                    {{ old('payment_type', $employee->payment_type) === 'monthly' ? 'checked' : '' }}

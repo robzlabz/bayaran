@@ -56,6 +56,9 @@ Route::middleware(['auth', 'role:owner,super_admin'])
         Route::get('attendances', [App\Http\Controllers\Company\AttendanceController::class, 'index'])->name('attendances.index');
         Route::get('attendances/create', [App\Http\Controllers\Company\AttendanceController::class, 'create'])->name('attendances.create');
         Route::post('attendances', [App\Http\Controllers\Company\AttendanceController::class, 'store'])->name('attendances.store');
+        Route::get('attendances/{attendance}/edit', [App\Http\Controllers\Company\AttendanceController::class, 'edit'])->name('attendances.edit');
+        Route::put('attendances/{attendance}', [App\Http\Controllers\Company\AttendanceController::class, 'update'])->name('attendances.update');
+        Route::delete('attendances/{attendance}', [App\Http\Controllers\Company\AttendanceController::class, 'destroy'])->name('attendances.destroy');
 
         Route::prefix('reports')->name('reports.')->group(function () {
             Route::get('/', [App\Http\Controllers\Company\ReportController::class, 'index'])->name('index');

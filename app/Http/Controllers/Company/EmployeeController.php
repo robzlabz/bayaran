@@ -8,7 +8,6 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class EmployeeController extends Controller
@@ -29,19 +28,18 @@ class EmployeeController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:20', 'unique:employees,phone', 'unique:users,phone'],
-            'payment_type' => ['required', 'in:monthly,daily,per_delivery'],
+            'payment_type' => ['required', 'in:monthly,daily,hourly,per_delivery'],
             'salary_amount' => ['required_if:payment_type,monthly', 'nullable', 'numeric', 'min:0'],
             'daily_rate' => ['required_if:payment_type,daily', 'nullable', 'numeric', 'min:0'],
+            'hourly_rate' => ['required_if:payment_type,hourly', 'nullable', 'numeric', 'min:0'],
             'delivery_rate' => ['required_if:payment_type,per_delivery', 'nullable', 'numeric', 'min:0'],
         ]);
 
         $validated['owner_id'] = auth()->id();
         $validated['balance'] = 0;
 
-        // Create employee
         $employee = Employee::create($validated);
 
-        // Create user account for employee
         $defaultPassword = 'bayaran' . substr($employee->phone, -4);
         User::create([
             'name' => $employee->name,
@@ -78,16 +76,16 @@ class EmployeeController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:20', 'unique:employees,phone,' . $employee->id],
-            'payment_type' => ['required', 'in:monthly,daily,per_delivery'],
+            'payment_type' => ['required', 'in:monthly,daily,hourly,per_delivery'],
             'salary_amount' => ['required_if:payment_type,monthly', 'nullable', 'numeric', 'min:0'],
             'daily_rate' => ['required_if:payment_type,daily', 'nullable', 'numeric', 'min:0'],
+            'hourly_rate' => ['required_if:payment_type,hourly', 'nullable', 'numeric', 'min:0'],
             'delivery_rate' => ['required_if:payment_type,per_delivery', 'nullable', 'numeric', 'min:0'],
             'is_active' => ['boolean'],
         ]);
 
         $employee->update($validated);
 
-        // Update related user
         if ($employee->user) {
             $employee->user->update([
                 'name' => $employee->name,
