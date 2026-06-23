@@ -6,32 +6,51 @@ Aplikasi manajemen karyawan dengan multi-tier (personal/company), multi-metode p
 
 ---
 
-## 🧱 Fase 1: Foundation (Minggu 1)
+## 🧱 Fase 1: Foundation ✅ Selesai
 
-### 1.1 Sistem Registrasi & Akun
+### 1.1 Role System
 
-| Fitur | Detail |
-|-------|--------|
-| Register | Pilih tipe akun: **Personal** (gratis) atau **Company** (berbayar) |
-| Login | Email + Password (dari Breeze) |
-| Profile | Edit profile, ganti password |
+| Role | Dashboard | Prefix URL |
+|------|-----------|------------|
+| **Super Admin** | Panel admin — lihat semua pengguna | `/admin/*` |
+| **Owner** (Company/Personal) | Kelola karyawan, hutang, absensi | `/company/*` |
+| **Employee** | Clock-in/out manual | `/employee/*` |
 
 **Database:**
 ```php
 users table:
 - account_type: enum('personal', 'company')
 - company_name: string, nullable (khusus company)
-- status: enum('active', 'pending_payment', 'suspended') // khusus company
+- role: enum('super_admin', 'owner', 'employee') — default 'owner'
+- owner_id: FK to users, nullable (untuk employee)
 ```
 
-### 1.2 Navigasi & Layout
+### 1.2 Arsitektur Controller
 
-- Sidebar navigasi (Breeze layout dimodifikasi)
-- Dashboard dengan ringkasan:
-  - Total karyawan
-  - Total hutang aktif
-  - Total saldo karyawan (untuk pekerja harian)
-  - Karyawan yang belum absen hari ini
+```
+App/Http/Controllers/
+├── Auth/               # Breeze auth (login redirect berdasarkan role)
+├── SuperAdmin/
+│   └── DashboardController.php   → /admin/dashboard
+├── Company/
+│   ├── DashboardController.php   → /company/dashboard
+│   └── EmployeeController.php    → /company/employees/*
+├── Employee/
+│   └── DashboardController.php   → /employee/dashboard
+└── ProfileController.php
+```
+
+### 1.3 Layout & Navigasi
+
+| Device | Tampilan |
+|--------|----------|
+| **Desktop (lg+)** | Sidebar fixed di kiri (w-64) + konten di kanan |
+| **Mobile (< lg)** | Topbar dengan hamburger → drawer slide dari kiri |
+
+Sidebar menyesuaikan role:
+- **Owner**: Dashboard, Karyawan, Hutang, Absensi, Pembayaran
+- **Employee**: Clock In/Out, Riwayat
+- **Super Admin**: Dashboard, Semua Pengguna
 
 ---
 
@@ -290,7 +309,7 @@ Fase 6: Laporan
 - [x] Breeze Blade installed (Tailwind + Dark mode)
 - [x] PostgreSQL configured
 - [x] Git initialized, first commit done
-- [ ] Fase 1: Foundation
+- [x] Fase 1: Foundation
 - [ ] Fase 2: Manajemen Karyawan
 - [ ] Fase 3: Hutang
 - [ ] Fase 4: Saldo & Ongkos
