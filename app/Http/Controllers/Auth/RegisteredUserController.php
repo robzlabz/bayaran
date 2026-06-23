@@ -44,12 +44,13 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
             'account_type' => $request->account_type,
             'company_name' => $request->account_type === 'company' ? $request->company_name : null,
+            'role' => 'owner',
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('company.dashboard', absolute: false));
     }
 }
