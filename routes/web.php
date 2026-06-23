@@ -7,6 +7,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// ─── Employee Auth (phone + password) ────────────────────
+Route::prefix('employee')->name('employee.')->group(function () {
+    Route::get('/login', [App\Http\Controllers\Employee\Auth\LoginController::class, 'create'])->name('login');
+    Route::post('/login', [App\Http\Controllers\Employee\Auth\LoginController::class, 'store']);
+    Route::post('/logout', [App\Http\Controllers\Employee\Auth\LoginController::class, 'destroy'])->name('logout');
+});
+
 // ─── Login redirect based on role ───────────────────────
 Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
     return redirect(match (auth()->user()->role) {

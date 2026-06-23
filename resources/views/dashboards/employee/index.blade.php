@@ -20,7 +20,7 @@
                             </span>
                         </div>
                         <p class="mt-3 text-lg font-medium text-gray-900 dark:text-gray-100">{{ Auth::user()->name }}</p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Karyawan</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ Auth::user()->phone }}</p>
                     </div>
 
                     <!-- Clock In/Out Button -->

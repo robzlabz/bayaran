@@ -2,6 +2,15 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
+    <div class="text-center mb-6">
+        <p class="text-lg font-semibold text-gray-900 dark:text-gray-100">Login Admin / Perusahaan</p>
+        @if (Route::has('employee.login'))
+            <a href="{{ route('employee.login') }}" class="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
+                Login untuk Karyawan →
+            </a>
+        @endif
+    </div>
+
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
