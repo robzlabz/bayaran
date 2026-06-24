@@ -61,8 +61,37 @@ class EmployeeController extends Controller
 
     public function show(Employee $employee): View
     {
-        $this->authorizeOwner($employee);
-        return view('employees.show', compact('employee'));
+        \$this->authorizeOwner($employee);
+
+        \$attendances = \App\Models\Attendance::where('employee_id', \$employee->id)
+            ->latest()
+            ->limit(10)
+            ->get();
+
+        \$debts = \App\Models\Debt::where('employee_id', \$employee->id)
+            ->latest('debt_date')
+            ->limit(20)
+            ->get();
+
+        \$payments = \App\Models\Payment::where('employee_id', \$employee->id)
+            ->with('debts')
+            ->latest('payment_date')
+            ->limit(10)
+            ->get();
+
+        \$transactions = \App\Models\Transaction::where('employee_id', \$employee->id)
+            ->latest()
+            ->limit(10)
+            ->get();
+
+        \$lastAttendance = \$attendances->first();
+        \$lastPayment = \$payments->first();
+        \$totalDebtRemaining = \$debts->where('is_paid', false)->sum('remaining');
+
+        return view('employees.show', compact(
+            'employee', 'attendances', 'debts', 'payments', 'transactions',
+            'lastAttendance', 'lastPayment', 'totalDebtRemaining'
+        ));
     }
 
     public function edit(Employee $employee): View
