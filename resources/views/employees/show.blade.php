@@ -72,6 +72,7 @@
                 <button @@click="tab = 'debts'" :class="tab === 'debts' ? 'bg-white dark:bg-gray-600 shadow-sm text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-600/50'" class="px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition">💰 Hutang</button>
                 <button @@click="tab = 'payments'" :class="tab === 'payments' ? 'bg-white dark:bg-gray-600 shadow-sm text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-600/50'" class="px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition">💳 Pembayaran</button>
                 <button @@click="tab = 'balance'" :class="tab === 'balance' ? 'bg-white dark:bg-gray-600 shadow-sm text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-600/50'" class="px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition">🏦 Mutasi Saldo</button>
+                <button @@click="tab = 'leaves'" :class="tab === 'leaves' ? 'bg-white dark:bg-gray-600 shadow-sm text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-600/50'" class="px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition">📅 Izin</button>
             </div>
 
             {{-- Tab: Absensi --}}
@@ -270,6 +271,53 @@
                         </div>
                     @else
                         <p class="text-sm text-gray-400 text-center py-8">Belum ada mutasi saldo</p>
+                    @endif
+                </div>
+            </div>
+
+            {{-- Tab: Izin --}}
+            <div x-show="tab === 'leaves'" class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg" style="display: none;">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Riwayat Izin & Cuti</h4>
+                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                            Kuota: <strong>{{ $employee->leave_remaining }}/{{ $employee->leave_quota }}</strong>
+                        </div>
+                    </div>
+                    @if ($leaves->count() > 0)
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full text-sm">
+                                <thead>
+                                    <tr class="border-b border-gray-200 dark:border-gray-700">
+                                        <th class="py-2 pr-4 text-left font-medium text-gray-500 dark:text-gray-400">Tipe</th>
+                                        <th class="py-2 pr-4 text-left font-medium text-gray-500 dark:text-gray-400">Dari</th>
+                                        <th class="py-2 pr-4 text-left font-medium text-gray-500 dark:text-gray-400">Sampai</th>
+                                        <th class="py-2 pr-4 text-left font-medium text-gray-500 dark:text-gray-400">Hari</th>
+                                        <th class="py-2 text-left font-medium text-gray-500 dark:text-gray-400">Alasan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($leaves as $l)
+                                        <tr class="border-b border-gray-100 dark:border-gray-700/50">
+                                            <td class="py-2 pr-4">
+                                                <span class="px-2 py-0.5 rounded-full text-xs font-medium
+                                                    @if($l->type === 'sick') bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300
+                                                    @elseif($l->type === 'permission') bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300
+                                                    @else bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 @endif">
+                                                    {{ $l->type_label }}
+                                                </span>
+                                            </td>
+                                            <td class="py-2 pr-4 text-gray-600 dark:text-gray-400">{{ $l->start_date->format('d M Y') }}</td>
+                                            <td class="py-2 pr-4 text-gray-600 dark:text-gray-400">{{ $l->end_date->format('d M Y') }}</td>
+                                            <td class="py-2 pr-4 font-medium text-gray-900 dark:text-gray-100">{{ $l->days }} hari</td>
+                                            <td class="py-2 text-gray-500 dark:text-gray-400 max-w-[150px] truncate">{{ $l->reason ?? '-' }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <p class="text-sm text-gray-400 text-center py-8">Belum ada izin</p>
                     @endif
                 </div>
             </div>

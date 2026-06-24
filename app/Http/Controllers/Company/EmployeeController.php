@@ -84,12 +84,17 @@ class EmployeeController extends Controller
             ->limit(10)
             ->get();
 
+        $leaves = \App\Models\Leave::where('employee_id', $employee->id)
+            ->latest('start_date')
+            ->limit(20)
+            ->get();
+
         $lastAttendance = $attendances->first();
         $lastPayment = $payments->first();
         $totalDebtRemaining = $debts->where('is_paid', false)->sum('remaining');
 
         return view('employees.show', compact(
-            'employee', 'attendances', 'debts', 'payments', 'transactions',
+            'employee', 'attendances', 'debts', 'payments', 'transactions', 'leaves',
             'lastAttendance', 'lastPayment', 'totalDebtRemaining'
         ));
     }
