@@ -3,6 +3,7 @@
 use App\Http\Controllers\Company\AttendanceController as CompanyAttendanceController;
 use App\Http\Controllers\Company\DebtController;
 use App\Http\Controllers\Company\LeaveController;
+use App\Http\Controllers\Company\PaymentController;
 use App\Http\Controllers\Company\ReportController;
 use App\Http\Controllers\Company\TransactionController;
 use App\Http\Controllers\Employee\AttendanceController as EmployeeAttendanceController;
@@ -63,6 +64,7 @@ Route::middleware(['auth', 'role:owner,super_admin'])
         Route::delete('attendances/{attendance}', [App\Http\Controllers\Company\AttendanceController::class, 'destroy'])->name('attendances.destroy');
 
         Route::resource('leaves', App\Http\Controllers\Company\LeaveController::class)->except(['edit', 'update', 'show']);
+        Route::resource('payments', App\Http\Controllers\Company\PaymentController::class)->except(['edit', 'update', 'show']);
 
         Route::prefix('reports')->name('reports.')->group(function () {
             Route::get('/', [App\Http\Controllers\Company\ReportController::class, 'index'])->name('index');

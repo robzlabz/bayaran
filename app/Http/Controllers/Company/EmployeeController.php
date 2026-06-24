@@ -33,6 +33,7 @@ class EmployeeController extends Controller
             'daily_rate' => ['required_if:payment_type,daily', 'nullable', 'numeric', 'min:0'],
             'hourly_rate' => ['required_if:payment_type,hourly', 'nullable', 'numeric', 'min:0'],
             'delivery_rate' => ['required_if:payment_type,per_delivery', 'nullable', 'numeric', 'min:0'],
+            'pay_date' => ['nullable', 'integer', 'min:1', 'max:31'],
         ]);
 
         $validated['owner_id'] = auth()->id();
@@ -82,6 +83,8 @@ class EmployeeController extends Controller
             'daily_rate' => ['required_if:payment_type,daily', 'nullable', 'numeric', 'min:0'],
             'hourly_rate' => ['required_if:payment_type,hourly', 'nullable', 'numeric', 'min:0'],
             'delivery_rate' => ['required_if:payment_type,per_delivery', 'nullable', 'numeric', 'min:0'],
+            'pay_date' => ['nullable', 'integer', 'min:1', 'max:31'],
+            'pay_date' => ['nullable', 'integer', 'min:1', 'max:31'],
             'is_active' => ['boolean'],
         ]);
 

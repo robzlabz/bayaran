@@ -21,6 +21,7 @@ class Employee extends Model
         'delivery_rate',
         'hourly_rate',
         'leave_quota',
+        'pay_date',
         'balance',
         'is_active',
         'photo',
@@ -52,6 +53,11 @@ class Employee extends Model
     public function leaves(): HasMany
     {
         return $this->hasMany(Leave::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
     }
 
     public function getPaymentTypeLabelAttribute(): string

@@ -104,6 +104,14 @@
                 </div>
 
                 {{-- Info Password --}}
+                {{-- Jadwal Gajian --}}
+                <div>
+                    <label for="pay_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Jadwal Gajian <span class="text-gray-400 font-normal">(tanggal setiap bulan)</span></label>
+                    <input type="number" id="pay_date" name="pay_date" value="{{ old("'pay_date'", $employee->pay_date) }}" min="1" max="31"
+                           class="block w-32 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm px-4 py-2.5"
+                           placeholder="25">
+                </div>
+
                 @if ($employee->user)
                     <div class="p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg text-xs text-gray-500 dark:text-gray-400">
                         Password login: <strong>{{ $employee->user->password_default ?? '(sudah diubah)' }}</strong>
