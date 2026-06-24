@@ -27,7 +27,7 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label for="clock_in" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Jam Masuk</label>
-                        <input type="datetime-local" id="clock_in" name="clock_in" value="{{ old('clock_in', now()->format('Y-m-d\TH:i')) }}" required
+                        <input type="datetime-local" id="clock_in" name="clock_in" value="{{ old('clock_in', now()->format('Y-m-d') . 'T09:00') }}" required
                                class="block w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm px-4 py-2.5">
                     </div>
                     <div>
