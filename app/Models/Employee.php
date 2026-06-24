@@ -50,6 +50,11 @@ class Employee extends Model
         return $this->hasOne(User::class, 'employee_id');
     }
 
+    public function debts(): HasMany
+    {
+        return $this->hasMany(Debt::class);
+    }
+
     public function leaves(): HasMany
     {
         return $this->hasMany(Leave::class);
