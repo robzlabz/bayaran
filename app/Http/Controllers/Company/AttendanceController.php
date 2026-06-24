@@ -52,9 +52,21 @@ class AttendanceController extends Controller
         $validated = $request->validate([
             'employee_id' => ['required', 'exists:employees,id'],
             'clock_in' => ['required', 'date'],
-            'clock_out' => ['nullable', 'date', 'after:clock_in'],
+            'clock_out' => ['nullable', 'date'],
             'notes' => ['nullable', 'string', 'max:500'],
         ]);
+
+        // Custom validation: same-day clock_out before clock_in is invalid
+        if ($validated['clock_out']) {
+            $clockIn = now()->parse($validated['clock_in']);
+            $clockOut = now()->parse($validated['clock_out']);
+
+            if ($clockIn->isSameDay($clockOut) && $clockOut->lt($clockIn)) {
+                return back()->withErrors([
+                    'clock_out' => 'Jam pulang tidak boleh sebelum jam masuk pada hari yang sama.',
+                ])->withInput();
+            }
+        }
 
         $employee = Employee::findOrFail($validated['employee_id']);
         abort_if($employee->owner_id !== auth()->id(), 403);
@@ -70,8 +82,9 @@ class AttendanceController extends Controller
         ];
 
         if ($data['clock_out']) {
-            $minutes = now()->parse($data['clock_out'])->diffInMinutes(now()->parse($data['clock_in']));
-            $data['work_hours'] = round($minutes / 60, 2);
+            $clockIn = now()->parse($data['clock_in']);
+            $clockOut = now()->parse($data['clock_out']);
+            $data['work_hours'] = round(abs($clockIn->floatDiffInMinutes($clockOut)) / 60, 2);
         }
 
         Attendance::create($data);
@@ -93,9 +106,21 @@ class AttendanceController extends Controller
 
         $validated = $request->validate([
             'clock_in' => ['required', 'date'],
-            'clock_out' => ['nullable', 'date', 'after:clock_in'],
+            'clock_out' => ['nullable', 'date'],
             'notes' => ['nullable', 'string', 'max:500'],
         ]);
+
+        // Custom validation: same-day clock_out before clock_in is invalid
+        if ($validated['clock_out']) {
+            $clockIn = now()->parse($validated['clock_in']);
+            $clockOut = now()->parse($validated['clock_out']);
+
+            if ($clockIn->isSameDay($clockOut) && $clockOut->lt($clockIn)) {
+                return back()->withErrors([
+                    'clock_out' => 'Jam pulang tidak boleh sebelum jam masuk pada hari yang sama.',
+                ])->withInput();
+            }
+        }
 
         $data = [
             'clock_in' => $validated['clock_in'],
@@ -106,8 +131,9 @@ class AttendanceController extends Controller
 
         if ($data['clock_out']) {
             $data['is_clock_out_manual'] = true;
-            $minutes = now()->parse($data['clock_out'])->diffInMinutes(now()->parse($data['clock_in']));
-            $data['work_hours'] = round($minutes / 60, 2);
+            $clockIn = now()->parse($data['clock_in']);
+            $clockOut = now()->parse($data['clock_out']);
+            $data['work_hours'] = round(abs($clockIn->floatDiffInMinutes($clockOut)) / 60, 2);
         } else {
             $data['work_hours'] = null;
         }
