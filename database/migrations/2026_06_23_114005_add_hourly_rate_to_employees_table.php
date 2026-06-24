@@ -9,13 +9,16 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Add hourly_rate column
         Schema::table('employees', function (Blueprint $table) {
             $table->decimal('hourly_rate', 15, 2)->nullable()->after('delivery_rate')->comment('Upah per jam');
         });
 
-        // Alter check constraint to include 'hourly'
-        DB::statement("ALTER TABLE employees DROP CONSTRAINT employees_payment_type_check");
+        // Safely drop constraint if exists, then add with hourly
+        try {
+            DB::statement("ALTER TABLE employees DROP CONSTRAINT IF EXISTS employees_payment_type_check");
+        } catch (\Exception $e) {
+            // constraint might not exist
+        }
         DB::statement("ALTER TABLE employees ADD CONSTRAINT employees_payment_type_check CHECK (payment_type::text = ANY (ARRAY['monthly'::character varying, 'daily'::character varying, 'per_delivery'::character varying, 'hourly'::character varying]::text[]))");
     }
 
@@ -25,7 +28,10 @@ return new class extends Migration
             $table->dropColumn('hourly_rate');
         });
 
-        DB::statement("ALTER TABLE employees DROP CONSTRAINT employees_payment_type_check");
+        try {
+            DB::statement("ALTER TABLE employees DROP CONSTRAINT IF EXISTS employees_payment_type_check");
+        } catch (\Exception $e) {}
+
         DB::statement("ALTER TABLE employees ADD CONSTRAINT employees_payment_type_check CHECK (payment_type::text = ANY (ARRAY['monthly'::character varying, 'daily'::character varying, 'per_delivery'::character varying]::text[]))");
     }
 };
