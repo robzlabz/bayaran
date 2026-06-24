@@ -67,11 +67,11 @@
         {{-- Tabs --}}
         <div x-data="{ tab: 'attendance' }" class="space-y-4">
             {{-- Tab buttons --}}
-            <div class="flex gap-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl overflow-x-auto">
-                <button @@click="tab = 'attendance'" :class="tab === 'attendance' ? 'bg-white dark:bg-gray-700 shadow-sm' : 'hover:bg-gray-200 dark:hover:bg-gray-700'" class="px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition">📋 Absensi</button>
-                <button @@click="tab = 'debts'" :class="tab === 'debts' ? 'bg-white dark:bg-gray-700 shadow-sm' : 'hover:bg-gray-200 dark:hover:bg-gray-700'" class="px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition">💰 Hutang</button>
-                <button @@click="tab = 'payments'" :class="tab === 'payments' ? 'bg-white dark:bg-gray-700 shadow-sm' : 'hover:bg-gray-200 dark:hover:bg-gray-700'" class="px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition">💳 Pembayaran</button>
-                <button @@click="tab = 'balance'" :class="tab === 'balance' ? 'bg-white dark:bg-gray-700 shadow-sm' : 'hover:bg-gray-200 dark:hover:bg-gray-700'" class="px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition">🏦 Mutasi Saldo</button>
+            <div class="flex gap-1 bg-gray-100 dark:bg-gray-700/50 p-1 rounded-xl overflow-x-auto">
+                <button @@click="tab = 'attendance'" :class="tab === 'attendance' ? 'bg-white dark:bg-gray-600 shadow-sm text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-600/50'" class="px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition">📋 Absensi</button>
+                <button @@click="tab = 'debts'" :class="tab === 'debts' ? 'bg-white dark:bg-gray-600 shadow-sm text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-600/50'" class="px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition">💰 Hutang</button>
+                <button @@click="tab = 'payments'" :class="tab === 'payments' ? 'bg-white dark:bg-gray-600 shadow-sm text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-600/50'" class="px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition">💳 Pembayaran</button>
+                <button @@click="tab = 'balance'" :class="tab === 'balance' ? 'bg-white dark:bg-gray-600 shadow-sm text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-600/50'" class="px-4 py-2 text-sm font-medium rounded-lg whitespace-nowrap transition">🏦 Mutasi Saldo</button>
             </div>
 
             {{-- Tab: Absensi --}}

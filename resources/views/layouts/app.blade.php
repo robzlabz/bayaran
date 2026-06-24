@@ -7,6 +7,15 @@
 
         <title>{{ config('app.name', 'Laravel') }} @isset($header) — {{ $header }} @endisset</title>
 
+        <!-- Dark mode restoration (runs before Alpine) -->
+        <script>
+            if (localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        </script>
+
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @stack('scripts')
@@ -14,7 +23,7 @@
     <body class="font-sans antialiased">
         @php $user = Auth::user(); @endphp
 
-        <div x-data="{ sidebarOpen: false }" class="min-h-screen bg-gray-100 dark:bg-gray-900 lg:flex">
+        <div x-data="{ sidebarOpen: false, isDark: document.documentElement.classList.contains('dark') }" class="min-h-screen bg-gray-100 dark:bg-gray-900 lg:flex">
 
             <!-- Mobile overlay -->
             <div x-show="sidebarOpen" @@click="sidebarOpen = false" class="fixed inset-0 z-30 bg-gray-900/50 lg:hidden" style="display: none;"></div>
@@ -133,6 +142,23 @@
                                 <span>Semua Pengguna</span>
                             </x-nav-link>
                         @endif
+
+                        {{-- Dark Mode Toggle --}}
+                        <div class="px-3 pt-4">
+                            <button @@click="isDark = !isDark; document.documentElement.classList.toggle('dark'); localStorage.setItem('darkMode', isDark)" class="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <template x-if="!isDark">
+                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                                    </svg>
+                                </template>
+                                <template x-if="isDark">
+                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                    </svg>
+                                </template>
+                                <span x-text="isDark ? 'Mode Terang' : 'Mode Gelap'"></span>
+                            </button>
+                        </div>
                     </nav>
 
                     <!-- User info & Logout -->
