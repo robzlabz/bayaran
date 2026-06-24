@@ -41,10 +41,12 @@
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                                 <td class="px-4 py-3">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-300 text-xs font-bold shrink-0">
-                                            {{ substr($emp->name, 0, 1) }}
-                                        </div>
-                                        <span class="font-medium text-gray-900 dark:text-gray-100">{{ $emp->name }}</span>
+                                        <a href="{{ route('company.employees.show', $emp) }}" class="flex items-center gap-3 hover:opacity-80 transition">
+                                            <div class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-300 text-xs font-bold shrink-0">
+                                                {{ substr($emp->name, 0, 1) }}
+                                            </div>
+                                            <span class="font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400">{{ $emp->name }}</span>
+                                        </a>
                                     </div>
                                 </td>
                                 <td class="px-4 py-3 text-gray-600 dark:text-gray-400">{{ $emp->phone ?? '-' }}</td>
