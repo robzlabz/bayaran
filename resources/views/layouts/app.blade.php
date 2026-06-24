@@ -19,6 +19,37 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @stack('scripts')
+        <script>
+            document.addEventListener('alpine:init', () => {
+                Alpine.data('searchableSelect', (config) => ({
+                    name: config.name,
+                    options: config.options || [],
+                    selectedValue: config.selected || '',
+                    placeholder: config.placeholder || '— Pilih —',
+                    search: '',
+                    open: false,
+
+                    get selectedLabel() {
+                        const opt = this.options.find(o => o.value == this.selectedValue);
+                        return opt ? opt.label : '';
+                    },
+
+                    get filteredOptions() {
+                        if (!this.search) return this.options;
+                        const q = this.search.toLowerCase();
+                        return this.options.filter(o =>
+                            o.label.toLowerCase().includes(q) ||
+                            (o.subtext && o.subtext.toLowerCase().includes(q))
+                        );
+                    },
+
+                    select(value, label) {
+                        this.selectedValue = value;
+                        this.search = '';
+                    }
+                }));
+            });
+        </script>
     </head>
     <body class="font-sans antialiased">
         @php $user = Auth::user(); @endphp
