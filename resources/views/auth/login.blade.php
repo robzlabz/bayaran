@@ -9,7 +9,7 @@
                 Karyawan
             </button>
             <button @@click="tab = 'admin'" :class="tab === 'admin' ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'" class="flex-1 pb-3 text-sm font-medium border-b-2 transition text-center">
-                Admin / Perusahaan
+                Perusahaan
             </button>
         </div>
 
