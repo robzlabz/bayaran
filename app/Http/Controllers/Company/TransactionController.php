@@ -28,10 +28,11 @@ class TransactionController extends Controller
         return view('transactions.index', compact('transactions', 'employees', 'employeeId'));
     }
 
-    public function createTopup(): View
+    public function createTopup(Request $request): View
     {
         $employees = Employee::where('owner_id', auth()->id())->where('is_active', true)->get();
-        return view('transactions.topup', compact('employees'));
+        $selectedEmployeeId = $request->get('employee_id');
+        return view('transactions.topup', compact('employees', 'selectedEmployeeId'));
     }
 
     public function storeTopup(Request $request): RedirectResponse
@@ -64,10 +65,11 @@ class TransactionController extends Controller
             ->with('success', 'Saldo <strong>' . $employee->name . '</strong> berhasil ditambah Rp ' . number_format($validated['amount'], 0, ',', '.'));
     }
 
-    public function createTransport(): View
+    public function createTransport(Request $request): View
     {
         $employees = Employee::where('owner_id', auth()->id())->where('is_active', true)->get();
-        return view('transports.create', compact('employees'));
+        $selectedEmployeeId = $request->get('employee_id');
+        return view('transports.create', compact('employees', 'selectedEmployeeId'));
     }
 
     public function storeTransport(Request $request): RedirectResponse

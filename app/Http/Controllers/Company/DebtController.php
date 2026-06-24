@@ -26,10 +26,11 @@ class DebtController extends Controller
         return view('debts.index', compact('debts', 'totalUnpaid', 'totalDebt'));
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
         $employees = Employee::where('owner_id', auth()->id())->where('is_active', true)->get();
-        return view('debts.create', compact('employees'));
+        $selectedEmployeeId = $request->get('employee_id');
+        return view('debts.create', compact('employees', 'selectedEmployeeId'));
     }
 
     public function store(Request $request): RedirectResponse

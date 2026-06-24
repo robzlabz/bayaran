@@ -20,7 +20,7 @@
                             class="block w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm px-4 py-2.5">
                         <option value="">— Pilih karyawan —</option>
                         @foreach ($employees as $emp)
-                            <option value="{{ $emp->id }}" data-balance="{{ $emp->balance }}" data-salary="{{ $emp->salary_amount ?? $emp->daily_rate ?? $emp->hourly_rate ?? 0 }}" data-paydate="{{ $emp->pay_date }}" {{ old('employee_id') == $emp->id ? 'selected' : '' }}>
+                            <option value="{{ $emp->id }}" data-balance="{{ $emp->balance }}" data-salary="{{ $emp->salary_amount ?? $emp->daily_rate ?? $emp->hourly_rate ?? 0 }}" data-paydate="{{ $emp->pay_date }}" {{ old("employee_id", $selectedEmployeeId) == $emp->id ? "selected" : "" }}>
                                 {{ $emp->name }}
                                 @if ($emp->pay_date) — Tgl {{ $emp->pay_date }} @endif
                                 @if ($emp->debts->count() > 0) — Hutang: Rp {{ number_format($emp->debts->sum('remaining'), 0, ',', '.') }} @endif

@@ -38,12 +38,13 @@ class PaymentController extends Controller
         ));
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
         $employees = Employee::where('owner_id', auth()->id())->where('is_active', true)
             ->with(['debts' => function ($q) { $q->unpaid(); }])
             ->get();
-        return view('payments.create', compact('employees'));
+        $selectedEmployeeId = $request->get('employee_id');
+        return view('payments.create', compact('employees', 'selectedEmployeeId'));
     }
 
     public function store(Request $request): RedirectResponse
