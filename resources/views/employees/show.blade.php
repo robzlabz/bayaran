@@ -77,7 +77,13 @@
             {{-- Tab: Absensi --}}
             <div x-show="tab === 'attendance'" class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
-                    <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">Riwayat Absensi</h4>
+                    <div class="flex items-center justify-between mb-4">
+                        <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Riwayat Absensi</h4>
+                        <a href="{{ route('company.attendances.create') }}" class="inline-flex items-center gap-1 px-3 py-1.5 bg-yellow-600 hover:bg-yellow-700 text-white text-xs font-medium rounded-lg transition">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                            Input Manual
+                        </a>
+                    </div>
                     @if ($attendances->count() > 0)
                         <div class="overflow-x-auto">
                             <table class="min-w-full text-sm">
@@ -112,9 +118,15 @@
                 <div class="p-6">
                     <div class="flex items-center justify-between mb-4">
                         <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Riwayat Hutang</h4>
-                        @if ($totalDebtRemaining > 0)
-                            <span class="text-sm text-red-600 dark:text-red-400 font-medium">Sisa: Rp {{ number_format($totalDebtRemaining, 0, ',', '.') }}</span>
-                        @endif
+                        <div class="flex items-center gap-2">
+                            @if ($totalDebtRemaining > 0)
+                                <span class="text-xs text-red-600 dark:text-red-400 font-medium">Sisa: Rp {{ number_format($totalDebtRemaining, 0, ',', '.') }}</span>
+                            @endif
+                            <a href="{{ route('company.debts.create') }}" class="inline-flex items-center gap-1 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                Catat Hutang
+                            </a>
+                        </div>
                     </div>
                     @if ($debts->count() > 0)
                         <div class="overflow-x-auto">
@@ -160,7 +172,13 @@
             {{-- Tab: Pembayaran --}}
             <div x-show="tab === 'payments'" class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg" style="display: none;">
                 <div class="p-6">
-                    <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">Riwayat Pembayaran Gaji</h4>
+                    <div class="flex items-center justify-between mb-4">
+                        <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Riwayat Pembayaran Gaji</h4>
+                        <a href="{{ route('company.payments.create') }}" class="inline-flex items-center gap-1 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium rounded-lg transition">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                            Proses Pembayaran
+                        </a>
+                    </div>
                     @if ($payments->count() > 0)
                         <div class="overflow-x-auto">
                             <table class="min-w-full text-sm">
@@ -203,7 +221,19 @@
             {{-- Tab: Mutasi Saldo --}}
             <div x-show="tab === 'balance'" class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg" style="display: none;">
                 <div class="p-6">
-                    <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">Mutasi Saldo</h4>
+                    <div class="flex items-center justify-between mb-4">
+                        <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Mutasi Saldo</h4>
+                        <div class="flex items-center gap-2">
+                            <a href="{{ route('company.transactions.topup') }}" class="inline-flex items-center gap-1 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium rounded-lg transition">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                Top Up
+                            </a>
+                            <a href="{{ route('company.transports.create') }}" class="inline-flex items-center gap-1 px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-medium rounded-lg transition">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                Ongkos
+                            </a>
+                        </div>
+                    </div>
                     @if ($transactions->count() > 0)
                         <div class="overflow-x-auto">
                             <table class="min-w-full text-sm">
