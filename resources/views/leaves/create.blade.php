@@ -15,15 +15,12 @@
 
                 <div>
                     <label for="employee_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Karyawan</label>
-                    <select id="employee_id" name="employee_id" required
-                            class="block w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm px-4 py-2.5">
-                        <option value="">— Pilih karyawan —</option>
-                        @foreach ($employees as $emp)
-                            <option value="{{ $emp->id }}" {{ old('employee_id') == $emp->id ? 'selected' : '' }} data-quota="{{ $emp->leave_remaining }}">
-                                {{ $emp->name }} — Sisa kuota: {{ $emp->leave_remaining }}/{{ $emp->leave_quota }}
-                            </option>
-                        @endforeach
-                    </select>
+                    <x-searchable-select
+                        name="employee_id"
+                        label="Karyawan"
+                        placeholder="— Pilih karyawan —"
+                        :options="$employees->map(fn($e) => ['value' => $e->id, 'label' => $e->name . ' — ' . $e->leave_remaining . '/' . $e->leave_quota, 'subtext' => $e->phone ?? ''])->values()->toArray()"
+                    />
                 </div>
 
                 <div>
